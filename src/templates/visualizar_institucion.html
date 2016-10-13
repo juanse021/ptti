@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block titulo %} Grupos registrados {% endblock %}
+
+{% block encabezado %}
+  <h1>Grupos Registrados</h1>
+
+<ul>
+	{% for dato in institucion %}
+  	<li>{{dato.nit|capfirst}} - <em>{{dato.nombre}}</em> - <b>{{dato.sitio_web}}</b></li>
+  	{% empty %}
+  	<li>No hay usuarios registrados, aún.</li>
+	{% endfor %}
+	<a href="javascript:history.go(-1)">Regresar</a>
+</ul>
+{% endblock %}
