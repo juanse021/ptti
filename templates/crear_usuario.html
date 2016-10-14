@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Crear Usuario</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+	<form action="" method="POST" name="cu_Form">
+		{% csrf_token %}
+		<table>
+			{{formulario}}
+		</table>
+		<input type="submit" value="Crear">
+	</form>
+</body>
+</html>

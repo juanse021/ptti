@@ -1,0 +1,20 @@
+{% block titulo %} perfil administrador{% endblock %}
+
+{% block encabezado %}
+  <h1>Bienvenido Administrador</h1>
+  <ul>
+  	<li><a href="/estudiante">crear estudiante</a></li>
+    <li><a href="/editar_administrador/{{request.user.id}}">Editar datos Administrador</a></li>
+  	<li><a href="/crear_sicologo">crear sicologo</a></li>
+  	<li><a href="/visualizarestudiante">visualizar estudiante</a></li>
+  	<li><a href="/visualizarsicologo">visualizar sicologo</a></li>
+    <li><a href="/crear_institucion">crear institucion</a></li>
+    <li><a href="/visualizarinstitucion">visualizar institucion</a></li>
+  	<li>opciones institucion</li>
+  	<li>opciones grupo</li>
+  	<li>gestionar test</li>
+  	<li>visualizar informe</li>
+  	<li><a href='/cerrar'>Cerrar sesion</a></li>
+  </ul>
+
+{% endblock %}

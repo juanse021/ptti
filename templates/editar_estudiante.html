@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Editar Estudiante</title>
+</head>
+<body>
+	<h1>Editar Estudiante</h1>
+	<form method="POST">
+		{% csrf_token %}
+		<table>
+			{{formulario.as_table}}
+		</table>
+		<input type="submit" value="Guardar" />
+	</form>
+</body>
+</html>

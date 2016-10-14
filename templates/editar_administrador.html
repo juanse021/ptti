@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Editar Administrador</title>
+</head>
+<body>
+	<h1>Editar Administrador</h1>
+	<form method="POST">
+		{% csrf_token %}
+		<table>
+			{{formulario.as_table}}
+		</table>
+		<input type="submit" value="Guardar" />
+	</form>
+</body>
+</html>
