@@ -16,9 +16,9 @@
 	  <ul>
 		  <li><a href='/'>Inicio</a></li>
 	      {% if request.user.is_authenticated and request.user.is_superuser %}
-		<li><a href='/crear_administrador'>crear administrador</a></li>
-		<li><a href='/listar'>listar</a></li>
-		<li><a href='/cerrar'>Cerrar sesion</a></li>       
+			<li><a href='/crear_administrador'>crear administrador</a></li>
+			<li><a href='/listar'>listar</a></li>
+			<li><a href='/cerrar'>Cerrar sesion</a></li>       
 	      {% endif %}
 
 		</ul>

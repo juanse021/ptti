@@ -7,6 +7,8 @@ from django.template import RequestContext
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import password_reset, password_reset_confirm
+from django.core.urlresolvers import reverse
 
 
 from .form import *
@@ -19,7 +21,12 @@ def administrador(request):
 	return render(request, "administrador.html")
 
 def perfiladmin(request):
-    return render(request, "vistaadministrador.html")
+    #return render(request, "vistaadministrador.html")
+	#usuarios = Administrador.objects.all()
+	if request.user.tipo_usuario != 'A':		
+		return HttpResponseRedirect('/')
+	else:
+		return render(request,'vistaadministrador.html',)
 
 @login_required(login_url='/ingresar')
 def listar(request):
@@ -28,18 +35,25 @@ def listar(request):
 
 def ingresar(request):
     if not request.user.is_anonymous():
-        return HttpResponseRedirect('/privado')
+        if request.user.is_superuser:
+            return HttpResponseRedirect('/privado')
+        if request.user.tipo_usuario == 'A':
+            return HttpResponseRedirect('/administrador')
+        if request.user.tipo_usuario == 'S':
+            return render(request, "vistasicologo.html")
+        if request.user.tipo_usuario == 'E':
+            return render(request, "vistaestudiante.html")
     if request.method == 'POST':
         formulario = AuthenticationForm(request.POST or None)
         if formulario.is_valid:
             clave = request.POST['password']
             email = request.POST['username']
-            #usuario = Usuario.objects.filter(email=email)
-            #if len(usuario) == 1:
-            #    usuario = Usuario.objects.filter(email=email)
-            #    acceso = authenticate(username=usuario[0].username, password=clave)
-            #else:
-            acceso = authenticate(username=email, password=clave)
+            usuario = Usuario.objects.filter(email=email)
+            if len(usuario) == 1:
+                usuario = Usuario.objects.filter(email=email)
+                acceso = authenticate(username=usuario[0].username, password=clave)
+            else:
+            	acceso = authenticate(username=email, password=clave)
             if acceso is not None:
                 if acceso.is_active:
                     login(request, acceso)
@@ -61,8 +75,15 @@ def ingresar(request):
 
 @login_required(login_url='/ingresar')
 def privado(request):
-    usuario = request.user
-    return render(request,'privado.html')
+    #usuario = request.user
+    if request.user.is_superuser:
+         return render(request,'privado.html')
+    elif request.user.tipo_usuario == 'A':
+        return HttpResponseRedirect('/administrador')
+    elif request.user.tipo_usuario == 'S':
+        return render(request, "vistasicologo.html")
+    elif request.user.tipo_usuario == 'E':
+        return render(request, "vistaestudiante.html")
 
 @login_required(login_url='/ingresar')
 def cerrar(request):
@@ -71,8 +92,8 @@ def cerrar(request):
 
 @login_required(login_url='/login/')
 def administrador(request):
-    usuarios = Administrador.objects.all()
-    return render(request,'administrador.html',{'usuarios':usuarios})
+	usuarios = Administrador.objects.all()
+	return render(request,'administrador.html',{'usuarios':usuarios})
 
 @login_required(login_url='/login/')
 def visualizar_estudiante(request):
@@ -118,7 +139,7 @@ def crear_estudiante(request):
         formulario = FormularioEstudiante(request.POST)
         if formulario.is_valid():
             formulario.save()
-            return HttpResponseRedirect('/estudiante')
+            return HttpResponseRedirect('/visualizarestudiante')
     else:
         formulario = FormularioEstudiante()
     return render(request, 'crear_estudiante.html', {'formulario':formulario})
@@ -130,7 +151,7 @@ def editar_estudiante(request, user_id):
         formulario = EditarEstudiante(request.POST, instance = user)
         if formulario.is_valid():
             formulario.save()
-            return HttpResponseRedirect('/estudiante')
+            return HttpResponseRedirect('/visualizarestudiante')
         else:
             formulario = EditarEstudiante(instance=user)
     return render(request, 'editar_estudiante.html', {'formulario':formulario})
@@ -158,3 +179,12 @@ def crear_institucion(request):
     else:
         formulario = InstitucionFormulario()
     return render(request, 'crear_institucion.html', {'formulario':formulario})
+
+def reset_password(request):
+    return password_reset(request, template_name='password_reset_form.html',
+        email_template_name='password_reset_email.html',
+        subject_template_name='password_reset_subject.txt',
+        post_reset_redirect=reverse('ptti:index'))
+
+def reset_password_confirm(request, uidb64=None, token=None):
+    return password_reset_confirm(request, template_name='password_reset_confirm.html',uidb64=uidb64, token=token, post_reset_redirect=reverse('ptti:index'))

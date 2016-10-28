@@ -8,5 +8,6 @@
 		{% csrf_token %}
 		<table>{{formulario}}</table>
 		<p><input type='submit' value='Ingresar'/></p>
+		<a href="{% url 'ptti:reset_password' %}">recuperar contrase&ntilde;a</a>
 	</form>
 {% endblock %}
